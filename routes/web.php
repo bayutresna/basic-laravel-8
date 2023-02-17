@@ -2,27 +2,38 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PostController;
 use App\Models\Category;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
 use App\Models\User;
+use App\Services\newsletter;
 use Illuminate\Support\Facades\File;
+use \MailchimpMarketing\ApiClient;
+use \Illuminate\Validation\ValidationException;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::post('newsletter', NewsletterController::class);
+
+Route::get('ping',function(){
+    
+    $mailchimp = new ApiClient();
+
+    $mailchimp->setConfig([
+        'apiKey' => config('services.mailchimp.key'),
+        'server' => 'us21'
+    ]);
+
+    $response = $mailchimp->lists->getAllLists();
+});
+
 Route::controller(PostController::class)->group(function(){
     Route::get('/', 'index')->name('home');
     Route::get('post/{post:slug}', 'show');
+
+    Route::get('/admin/posts/create', 'create')->middleware('AdminOnly');
+    Route::post('/admin/posts', 'store')->middleware('AdminOnly');
 });
 
 Route::controller(AuthController::class)->group(function(){
