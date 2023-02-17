@@ -19,8 +19,9 @@ class AuthController extends Controller
             'password' => ['required','max:255','min:7']
         ]);
 
-        $request['password'] = bcrypt($request['password']);
         $user = User::create($request);
+
+        auth()->login($user);
         
         return redirect('/')->with('success', 'your account has been created');
     }
@@ -30,13 +31,13 @@ class AuthController extends Controller
     }
 
     public function logging(){
+
         $request = request()->validate([
             'email' => ['required', 'email'],
             'password' => ['required']
         ]);
-
         //attempt to authenticate the user and login using $request as credential
-        if(!auth()->attempt($request)){
+        if( !auth()->attempt($request)){
 
             return back()
             ->withInput()

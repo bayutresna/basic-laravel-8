@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Models\Category;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
@@ -33,4 +34,8 @@ Route::controller(AuthController::class)->group(function(){
 
     Route::post('/logout','logout')->middleware('auth'); 
 
+});
+
+Route::controller(CommentController::class)->group(function(){
+    Route::post('/posts/{post:slug}/comments', 'store')->middleware('auth');
 });
