@@ -14,9 +14,22 @@
                 </a>
             </div>
 
-            <div class="mt-8 md:mt-0">
-                <a href="/" class="text-xs font-bold uppercase">Home Page</a>
+            <div class="mt-8 md:mt-0 flex items-center">
+                
+                @auth
+                    
+                    <span class="text-xs font-bold uppercase">Welcome {{ auth()->user()->name }} </span>
+                    
+                    <form class="text-xs font-semibold text-blue-500 ml-6" method="POST" action="/logout">
+                        @csrf
+                        <button></button>
+                    </form>
+                @else
+                    <a href="/register" class="text-xs font-bold uppercase">Register</a>
+                    <a href="/login" class="mx-6 text-xs font-bold uppercase">Login</a>
 
+
+                @endauth
                 <a href="#" class="bg-blue-500 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5">
                     Subscribe for Updates
                 </a>
@@ -52,4 +65,12 @@
             </div>
         </footer>
     </section>
+    @if (session()->has('success'))
+        <div x-data="{show: true}"
+             x-init="setTimeout(()=> show = false, 2500)"
+             x-show="show" 
+             class="fixed bg-blue-500 text-white py-2 px-4 text-sm rounded-xl bottom-3 right-3" >
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
 </body>

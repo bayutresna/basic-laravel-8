@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Models\Category;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
@@ -18,6 +19,18 @@ use Illuminate\Support\Facades\File;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::controller(PostController::class)->group(function(){
+    Route::get('/', 'index')->name('home');
+    Route::get('post/{post:slug}', 'show');
+});
 
-Route::get('/', [PostController::class, 'index'])->name('home');
-Route::get('post/{post:slug}', [PostController::class,'show']);
+Route::controller(AuthController::class)->group(function(){
+    Route::get('/register', 'create')->middleware('guest');
+    Route::post('/register', 'store')->middleware('guest');
+    
+    Route::get('/login','login')->middleware('guest'); 
+    Route::post('/login','logging')->middleware('guest'); 
+
+    Route::post('/logout','logout')->middleware('auth'); 
+
+});
