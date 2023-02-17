@@ -11,17 +11,12 @@
             </header>
 
             {{-- comment form body form --}}
-            <div class="mt-6">
-                <textarea name="body" class="w-full text-sm focus:outline-none focus:ring" id="" rows="5" placeholder="What's on your mind?"></textarea>
-            </div>
-
-            @error('body')
-                <p class="text-xs text-red-500 mb-1">{{ $message }}</p>
-            @enderror                                
+                <x-form.textarea name="body"/>
+                               
 
             {{-- comment form submit button --}}
             <div class="flex justify-end pt-6 mt-6 border-t border-gray-200 ">
-                <x-submit-button>Post</x-submit-button>
+                <x-form.button>Submit</x-form.button>
             </div>
 
         </form>
