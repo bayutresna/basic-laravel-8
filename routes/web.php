@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewsletterController;
@@ -28,12 +29,23 @@ Route::get('ping',function(){
     $response = $mailchimp->lists->getAllLists();
 });
 
+Route::controller(AdminPostController::class)->middleware('can:admin')->group(function(){
+    Route::get('/admin/posts/create', 'create');
+    Route::get('/admin/posts', 'index');
+    Route::get('/admin/posts/{post}/edit', 'edit');
+
+
+    Route::post('/admin/posts', 'store');
+    Route::patch('/admin/posts/{post}', 'update');
+    Route::delete('/admin/posts/{post}', 'destroy');
+
+
+});
+
 Route::controller(PostController::class)->group(function(){
     Route::get('/', 'index')->name('home');
     Route::get('post/{post:slug}', 'show');
 
-    Route::get('/admin/posts/create', 'create')->middleware('AdminOnly');
-    Route::post('/admin/posts', 'store')->middleware('AdminOnly');
 });
 
 Route::controller(AuthController::class)->group(function(){
